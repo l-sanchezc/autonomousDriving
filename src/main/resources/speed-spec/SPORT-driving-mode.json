@@ -1,0 +1,45 @@
+{
+  "drivingMode": "SPORT",
+  "sensorEvents": [
+    {
+      "id": 1,
+      "description": "Traffic",
+      "action": -5
+    },
+    {
+      "id": 2,
+      "description": "Traffic Clear",
+      "action": 5
+    },
+    {
+      "id": 3,
+      "description": "Weather Rainy",
+      "action": -5
+    },
+    {
+      "id": 4,
+      "description": "Weather Clear",
+      "action": 5
+    },
+    {
+      "id": 5,
+      "description": "Slippery Road",
+      "action": -15
+    },
+    {
+      "id": 6,
+      "description": "Slippery Road Clear",
+      "action": 15
+    },
+    {
+      "id": 7,
+      "description": "Emergency Turbo",
+      "action": 30
+    },
+    {
+      "id": 10,
+      "description": "Speed Limit Sign X",
+      "action": 5
+    }
+  ]
+}
