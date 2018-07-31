@@ -1,0 +1,30 @@
+App created by Lazaro Sanchez Campos
+
+This app has been developed using Vert.x framework. I chose this framework due to it is event driven and nonblocking nature, making the app very easy to scale without using a lot of resources. 
+
+________________________________________________________
+To run the Application, please execute the following command from the main directory of the app (substitute drivingMode by one of the accepted ones: Normal, Sport or Safe):
+
+java -jar target/autonomous-driving-fat.jar run com.here.autonomous.driving.MainVerticle drivingMode
+
+To stop the program type exit in the command line.
+________________________________________________________
+Info about Vert.x (http://vertx.io):
+
+- Verticle: They are a bit like an actor in the Actor Model, they are basically chunks of code that get deployed and run by Vert.x. 
+
+- Event Bus: Allows Verticles to communicate with each other. It supports publish/subscribe, point to point, and request-response messaging. (Nervous system of Vert.x)
+________________________________________________________
+Brief Summary of the application:
+
+The application starts deploying the MainVerticle which deploys 2 more verticles (SensorController and VehicleController passing to this one as parameter the driving mode from the command line arguments).
+
+SensorController simulates a sensor that sends events to the EventBus("SPEED"), in this simulator we get the events as an input from the command line. 
+
+VehicleController has a consumer attached to the SPEED event bus, so every time that it receives an event it process the event and get a new stat, in this case the new speed of the vehicle. Different design patterns have been used to implement this part of the application such as Strategy Pattern and Factory Pattern. Both allow us to get the strategy to calculate the required stat, depending on the event bus address from where we received the new event. They will help us to implement new strategies to regulate other parameters of the car (such as shock absorber, tire pressure, lights...). For this case, VehicleController uses SpeedStatCalculationStrategy to get the new speed that has to be applied to the vehicle.
+
+SpeedStatCalculationStrategy receives the sensor message and the vehicle object and returns the new speed of the car. It validates the sensor message using the sensorEventValidator. The sensorEventValidator gets the eventId from the sensor message and a Map with the specifications of the drivingMode of the vehicle. 
+
+This Map is created using getDrivingModeSpecifications method from DrivingModeSpecUtils which transforms the specifications implemented as a json files inside resources/speed-spec to a map. I chose to implement the specifications that appear in the sensor events table in json files because they are readable, easy to maintain, and allow us to add new driving modes or events. 
+
+If the eventId is valid, SpeedStatCalculationStrategy uses the method getNewSpeed from newSpeedUtils to return the new speed that has to be applied to the vehicle. VehicleController gets this value and it updates the speed of the vehicle. This newSpeed is replied to the sensor in order to know that the event was processed.
